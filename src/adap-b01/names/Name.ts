@@ -20,9 +20,7 @@ export class Name {
 
     /** Expects that all Name components are properly masked */
     constructor(other: string[], delimiter?: string) {
-        if (delimiter) {
-            this.delimiter = delimiter;
-        }
+        this.delimiter = delimiter ?? DEFAULT_DELIMITER;
         this.components = other;
     }
 
@@ -33,7 +31,6 @@ export class Name {
      */
     public asString(delimiter: string = this.delimiter): string {
         return this.components.join(delimiter);
-        //TODO: is this correct? 
     }
 
     /** 
@@ -42,8 +39,13 @@ export class Name {
      * The control characters in the data string are the default characters
      */
     public asDataString(): string {
-        return this.components.join(this.delimiter);
-        //TODO: is this correct? 
+        return this.components.map((comp) => {
+            let element = comp.split(ESCAPE_CHARACTER).join(ESCAPE_CHARACTER + ESCAPE_CHARACTER);
+            if (this.delimiter !== "") {
+                element = element.split(this.delimiter).join(ESCAPE_CHARACTER + this.delimiter);
+            }
+            return element;
+        }).join(this.delimiter);
     }
 
     public getComponent(i: number): string {
