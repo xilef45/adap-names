@@ -19,6 +19,7 @@ export class Name {
     private components: string[] = [];
 
     /** Expects that all Name components are properly masked */
+    // @methodtype constructor-method
     constructor(other: string[], delimiter?: string) {
         this.delimiter = delimiter ?? DEFAULT_DELIMITER;
         this.components = other;
@@ -29,6 +30,7 @@ export class Name {
      * Control characters are not escaped (creating a human-readable string)
      * Users can vary the delimiter character to be used
      */
+    // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
         return this.components.join(delimiter);
     }
@@ -38,6 +40,7 @@ export class Name {
      * Machine-readable means that from a data string, a Name can be parsed back in
      * The control characters in the data string are the default characters
      */
+    // @methodtype conversion-method
     public asDataString(): string {
         return this.components.map((comp) => {
             let element = comp.split(ESCAPE_CHARACTER).join(ESCAPE_CHARACTER + ESCAPE_CHARACTER);
@@ -47,7 +50,8 @@ export class Name {
             return element;
         }).join(this.delimiter);
     }
-
+ 
+    // @methodtype get-method
     public getComponent(i: number): string {
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
@@ -56,6 +60,7 @@ export class Name {
     }
 
     /** Expects that new Name component c is properly masked */
+    // @methodtype set-method
     public setComponent(i: number, c: string): void {
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
@@ -64,11 +69,13 @@ export class Name {
     }
 
      /** Returns number of components in Name instance */
+     // @methodtype getter-method
      public getNoComponents(): number {
         return this.components.length;
     }
 
     /** Expects that new Name component c is properly masked */
+    // @methodtype command-method
     public insert(i: number, c: string): void {
         if (i < 0 || i > this.components.length) {
             throw new Error("index out of bounds");
@@ -77,10 +84,12 @@ export class Name {
     }
 
     /** Expects that new Name component c is properly masked */
+    // @methodtype command-method
     public append(c: string): void {
         this.components.push(c);
     }
 
+    // @methodtype command-method
     public remove(i: number): void {
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
