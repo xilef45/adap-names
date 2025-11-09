@@ -1,14 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { Name } from "./Name";
-import { StringName } from "./StringName";
+import { Name } from "../../../src/adap-b02/names/Name";
+import { StringName } from "../../../src/adap-b02/names/StringName";
 
+describe("CustomStringName Tests", () => {
   it("constructor example1",() => {
     let n:Name = new StringName("oss.cs.fau.de",'.');
     expect(n.asString()).toBe("oss.cs.fau.de");
   });
 
   it("constructor example2",() => {
-    let n:Name = new StringName("....",'/');
+    let n:Name = new StringName("///",'/');
     expect(n.asString()).toBe("///");
   });
 
@@ -62,9 +63,9 @@ import { StringName } from "./StringName";
     expect(() => n.remove(1)).toThrow();
     expect(() => n.insert(3, "x")).toThrow();
   });
-
+  
   it("asDataString escapes default delimiter and escape chars", () => {
-    let n: Name = new StringName("part.one\\two\\three");
+    let n: Name = new StringName("part\\.one.two\\three");
     expect(n.asString()).toBe("part.one.two\\three");
     const data = n.asDataString();
     expect(data).toBe("part\\.one.two\\\\three");
@@ -75,3 +76,4 @@ import { StringName } from "./StringName";
     expect(n.asString()).toBe("a.b#c\\d");
     expect(n.asString('#')).toBe("a.b#c\\d");
   });
+});

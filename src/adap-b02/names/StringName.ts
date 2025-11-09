@@ -14,7 +14,8 @@ export class StringName implements Name {
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        return this.name.replace(new RegExp(this.delimiter, 'g'), delimiter);
+        
+        return this.name.replace(this.delimiter, delimiter);
     }
 
     public asDataString(): string {
@@ -73,6 +74,7 @@ export class StringName implements Name {
             this.name = c;
         } else {
             this.name = this.name + this.delimiter + c;
+            this.noComponents += 1;
         }
     }
 

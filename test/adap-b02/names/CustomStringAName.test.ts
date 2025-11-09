@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { Name } from "./Name";
-import { StringArrayName } from "./StringArrayName";
+import { Name } from "../../../src/adap-b02/names/Name";
+import { StringArrayName } from "../../../src/adap-b02/names/StringArrayName";
 
+describe("CustomStringArrayName Tests", () => {
   it("constructor example1",() => {
     let n:Name = new StringArrayName(["oss", "cs", "fau", "de"],'.');
     expect(n.asString()).toBe("oss.cs.fau.de");
@@ -74,3 +75,4 @@ import { StringArrayName } from "./StringArrayName";
     expect(n.asString()).toBe("a.b#c\\d");
     expect(n.asString('#')).toBe("a.b#c\\d");
   });
+});
