@@ -52,6 +52,7 @@ export class Name {
     }
  
     // @methodtype get-method
+    /** Returns properly masked component string */
     public getComponent(i: number): string {
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
