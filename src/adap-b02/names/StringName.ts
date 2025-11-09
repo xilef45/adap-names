@@ -14,11 +14,12 @@ export class StringName implements Name {
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        
+        // TODO: check masking
         return this.name.replace(this.delimiter, delimiter);
     }
 
     public asDataString(): string {
+        // TODO: check masking
         let components = this.name.split(this.delimiter);
         let escapedComponents = components.map((comp) => {
             let element = comp.split(ESCAPE_CHARACTER).join(ESCAPE_CHARACTER + ESCAPE_CHARACTER);
@@ -43,6 +44,7 @@ export class StringName implements Name {
     }
 
     public getComponent(x: number): string {
+        // TODO: check masking
         if (x < 0 || x >= this.noComponents) {
             throw new Error("index out of bounds");
         }

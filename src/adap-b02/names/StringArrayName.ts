@@ -38,6 +38,7 @@ export class StringArrayName implements Name {
     }
 
      public getComponent(i: number): string {
+        //TODO: check masking
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
         }
