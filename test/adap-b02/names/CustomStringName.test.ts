@@ -64,16 +64,16 @@ describe("CustomStringName Tests", () => {
     expect(() => n.insert(3, "x")).toThrow();
   });
   
-  it("asDataString escapes default delimiter and escape chars", () => {
-    let n: Name = new StringName("part\\.one.two\\three");
-    expect(n.asString()).toBe("part.one.two\\three");
-    const data = n.asDataString();
-    expect(data).toBe("part\\.one.two\\\\three");
-  });
-
-  it("asString with custom delimiter leaves components verbatim", () => {
-    let n: Name = new StringName("a.b#c\\d", '#');
-    expect(n.asString()).toBe("a.b#c\\d");
-    expect(n.asString('#')).toBe("a.b#c\\d");
-  });
+   it("asDataString escapes default delimiter and escape chars", () => {
+      let n: Name = new StringName("part\\.one.two\\three");
+      expect(n.asString()).toBe("part\\.one.two\\three");
+      const data = n.asDataString();
+      expect(data).toBe("part\\\\.one.two\\\\three");
+    });
+  
+    it("asString with custom delimiter leaves components verbatim", () => {
+      let n: Name = new StringName("a.b#c\\\\d", '#');
+      expect(n.asString()).toBe("a.b#c\\\\d");
+      expect(n.asString('#')).toBe("a.b#c\\\\d");
+    });
 });

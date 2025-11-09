@@ -64,10 +64,10 @@ describe("CustomStringArrayName Tests", () => {
   });
 
   it("asDataString escapes default delimiter and escape chars", () => {
-    let n: Name = new StringArrayName(["part.one", "two\\three"]);
-    expect(n.asString()).toBe("part.one.two\\three");
+    let n: Name = new StringArrayName(["part\\.one", "two\\three"]);
+    expect(n.asString()).toBe("part\\.one.two\\three");
     const data = n.asDataString();
-    expect(data).toBe("part\\.one.two\\\\three");
+    expect(data).toBe("part\\\\\\.one.two\\\\three");
   });
 
   it("asString with custom delimiter leaves components verbatim", () => {

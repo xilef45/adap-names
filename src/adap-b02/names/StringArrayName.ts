@@ -16,13 +16,13 @@ export class StringArrayName implements Name {
     }
 
     public asDataString(): string {
-        return this.components.map((comp) => {
-            let element = comp.split(ESCAPE_CHARACTER).join(ESCAPE_CHARACTER + ESCAPE_CHARACTER);
-            if (this.delimiter !== "") {
-                element = element.split(this.delimiter).join(ESCAPE_CHARACTER + this.delimiter);
-            }
-            return element;
-        }).join(this.delimiter);
+       return this.components.map((comp) => {
+                   let element = comp.split(ESCAPE_CHARACTER).join(ESCAPE_CHARACTER + ESCAPE_CHARACTER);
+                   if (this.delimiter !== "") {
+                       element = element.split(this.delimiter).join(ESCAPE_CHARACTER + this.delimiter);
+                   }
+                   return element;
+            }).join(this.delimiter);
     }
 
     public getDelimiterCharacter(): string {
@@ -38,7 +38,6 @@ export class StringArrayName implements Name {
     }
 
      public getComponent(i: number): string {
-        //TODO: check masking
         if (i < 0 || i >= this.components.length) {
             throw new Error("index out of bounds");
         }
