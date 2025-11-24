@@ -4,16 +4,15 @@ import { AbstractName } from "./AbstractName";
 
 export class StringArrayName extends AbstractName {
 
-    protected delimiter: string = DEFAULT_DELIMITER;
+    //protected delimiter: string = DEFAULT_DELIMITER;
     protected components: string[] = [];
 
      constructor(source: string[], delimiter?: string) {
-            super();
-            this.delimiter = delimiter ?? DEFAULT_DELIMITER;
-            this.components = other;
+            super(delimiter);
+            this.components = source;
         }
     
-    public asString(delimiter: string = this.delimiter): string {
+    /*public asString(delimiter: string = this.delimiter): string {
         return this.components.join(delimiter);
     }
 
@@ -43,6 +42,8 @@ export class StringArrayName extends AbstractName {
         return this.delimiter;
     }
 
+    */
+   
     public getNoComponents(): number {
         return this.components.length;
     }

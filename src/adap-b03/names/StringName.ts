@@ -8,12 +8,13 @@ export class StringName extends AbstractName {
     protected noComponents: number = 0;
 
     constructor(source: string, delimiter?: string) {
-        super();
+        super(delimiter);
         this.name = source;
         this.noComponents = source.split(this.delimiter).length;
     }
 
-     public clone(): Name {
+    /*
+    public clone(): Name {
         throw new Error("needs implementation or deletion");
     }
 
@@ -47,7 +48,7 @@ export class StringName extends AbstractName {
 
     public getDelimiterCharacter(): string {
         return this.delimiter;
-    }
+    }*/
 
     
 
@@ -56,7 +57,7 @@ export class StringName extends AbstractName {
     }
 
     public getComponent(i: number): string {
-        // TODO: check masking
+        
         if (i < 0 || i >= this.noComponents) {
             throw new Error("index out of bounds");
         }
@@ -102,11 +103,11 @@ export class StringName extends AbstractName {
         this.noComponents -= 1;
     }
 
-    public concat(other: Name): void {
+    /*public concat(other: Name): void {
         for (let i = 0; i < other.getNoComponents(); i++) {
             this.append(other.getComponent(i));
         }
         this.noComponents += other.getNoComponents();
     }
-
+    */
 }
