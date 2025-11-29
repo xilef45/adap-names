@@ -20,7 +20,8 @@ export class StringName extends AbstractName {
         super(delimiter);
 
         //Precondition for source
-        IllegalArgumentException.assert(AbstractName.isMasked(source,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "source not masked correct");
+        var isMask=AbstractName.isCorrectlyMasked(source,this.getDelimiterCharacter(),ESCAPE_CHARACTER);
+        IllegalArgumentException.assert(isMask, "source not masked correct");
           
         
 
@@ -92,7 +93,7 @@ export class StringName extends AbstractName {
        // Precondition
         StringName.assertIsStringName(this);
         IllegalArgumentException.assert(i >= 0 && i < this.noComponents, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
+        IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         let components = this.name.split(this.delimiter);
@@ -109,7 +110,7 @@ export class StringName extends AbstractName {
         // Precondition
         StringName.assertIsStringName(this);
         IllegalArgumentException.assert(i >= 0 && i <= this.noComponents, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
+        IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         const components = this.name.split(this.delimiter);
@@ -125,7 +126,7 @@ export class StringName extends AbstractName {
     public append(c: string) {
         // Precondition
         StringName.assertIsStringName(this);
-        IllegalArgumentException.assert(AbstractName.isMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
+        IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         this.name += this.delimiter + c;
@@ -172,15 +173,15 @@ export class StringName extends AbstractName {
     // helper
     
     private static assertIsStringName(input: any,failedMessage:string ="Missing Methods of StringName"){
-        InvalidStateException.assert(!StringName.isStringName(input), failedMessage );
+        InvalidStateException.assert(StringName.isStringName(input), failedMessage );
     }
 
     private static isStringName(input: any): input is StringName{
         var testing : boolean = super.isAbstractName(input) &&
             "name" in input && typeof input.name === "string" &&
-            "noComponents"in input && typeof input.noComponents === "number";
-        testing = testing && AbstractName.isMasked(input.name, input.getDelimiterCharacter(), input.ESCAPE_CHARACTER) &&
-            input.noComponents == input.name.split(input.getDelimiterCharacter).length;  
+            "noComponents" in input && typeof input.noComponents === "number";
+        testing = testing && AbstractName.isCorrectlyMasked(input.name, input.getDelimiterCharacter(), input.ESCAPE_CHARACTER) &&
+            input.noComponents === input.name.split(input.getDelimiterCharacter()).length;  
 
         return testing;
     }

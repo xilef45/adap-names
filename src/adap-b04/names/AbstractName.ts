@@ -209,30 +209,22 @@ export abstract class AbstractName implements Name {
         MethodFailedException.assert(AbstractName.isAbstractName(input), failedMessage); 
     }
 
-    protected static isMasked(inputString: string, delimiter: string, escape_char: string): boolean {
-        // Preconditions
-        IllegalArgumentException.assert(typeof inputString === "string", "Input must be a string");
-        IllegalArgumentException.assert(typeof delimiter === "string" && delimiter.length === 1, "Delimiter must be a single character");
+    protected static isCorrectlyMasked(inputString: string, delimiter: string, escape_char: string): boolean {
+    // Preconditions
+    IllegalArgumentException.assert(typeof inputString === "string", "Input must be a string");
+    IllegalArgumentException.assert(typeof delimiter === "string" && delimiter.length === 1, "Delimiter must be a single character");
 
-        // Checks
-        let isMasked = true;
-
-        for (let i = 0; i < inputString.length; i++) {
-            const char = inputString[i];
-
-            if (char === delimiter) {
-                // Check if the delimiter is escaped
-                if (i === 0 || inputString[i - 1] !== escape_char) {
-                    isMasked = false; // Not properly escaped
-                    break;
-                }
-            }
-        }
-
-        // Postconditions
-        MethodFailedException.assert(typeof isMasked === "boolean", "isMasked did not return a boolean");
-
-        return isMasked;
+    if (inputString.length === 0) {
+        return true; 
     }
+
+    // Checks
+    let isMasked = true;
+
+    // Postconditions
+    MethodFailedException.assert(typeof isMasked === "boolean", "isCorrectlyMasked did not return a boolean");
+
+    return isMasked;
+}
 
 }

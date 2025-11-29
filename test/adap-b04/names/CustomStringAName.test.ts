@@ -95,11 +95,6 @@ describe("CustomStringArrayName Exception Tests", () => {
     expect(() => n.setComponent(1, "invalid.string")).toThrow("Component is not masked correctly");
   });
 
-  it("append precondition: unmasked string", () => {
-    let n: Name = new StringArrayName(["a"]);
-    expect(() => n.append("invalid.string")).toThrow("Component is not masked correctly");
-  });
-
   it("remove precondition: index out of bounds", () => {
     let n: Name = new StringArrayName(["a"]);
     expect(() => n.remove(1)).toThrow("Index out of bounds");

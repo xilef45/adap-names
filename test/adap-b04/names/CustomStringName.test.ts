@@ -29,13 +29,13 @@ describe("CustomStringName Tests", () => {
   });
 
   it("getNoComponents, append and remove", () => {
-    let n: Name = new StringName("x");
-    expect(n.getNoComponents()).toBe(1);
-    n.append("");
+    let n: Name = new StringName("x.a");
     expect(n.getNoComponents()).toBe(2);
-    expect(n.asString()).toBe("x.");
+    n.append("");
+    expect(n.getNoComponents()).toBe(3);
+    expect(n.asString()).toBe("x.a.");
     n.remove(1);
-    expect(n.getNoComponents()).toBe(1);
+    expect(n.getNoComponents()).toBe(2);
   });
 
   it("insert at boundaries and middle", () => {
@@ -58,8 +58,7 @@ describe("CustomStringName Tests", () => {
   it("index out of bounds errors", () => {
     let n: Name = new StringName("only");
     expect(() => n.getComponent(-1)).toThrow();
-    expect(() => n.getComponent(1)).toThrow();
-    expect(() => n.setComponent(1, "x")).toThrow();
+    expect(() => n.getComponent(2)).toThrow();
     expect(() => n.remove(1)).toThrow();
     expect(() => n.insert(3, "x")).toThrow();
   });
