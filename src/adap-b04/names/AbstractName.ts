@@ -12,9 +12,13 @@ export abstract class AbstractName implements Name {
         //Precondition
         IllegalArgumentException.assert(delimiter != null, "delimiter null is not allowed");
         IllegalArgumentException.assert(delimiter != undefined , "delimiter undefined is not allowed");
-        IllegalArgumentException.assert(delimiter.length != 1, "delimiter must be a char");
+        IllegalArgumentException.assert(delimiter.length === 1, "delimiter must be a char");
 
         // Actions
+        if(delimiter=== undefined)
+        {
+            delimiter=DEFAULT_DELIMITER;
+        }
         this.delimiter = delimiter;
 
         //Postcondition
@@ -149,7 +153,7 @@ export abstract class AbstractName implements Name {
         MethodFailedException.assert(typeof returnValue === "string", "Method produced non string result" );
         MethodFailedException.assert(returnValue != null, "delimiter null is not allowed");
         MethodFailedException.assert(returnValue != undefined , "delimiter undefined is not allowed");
-        MethodFailedException.assert(returnValue.length != 1, "delimiter must be a char");
+        MethodFailedException.assert(returnValue.length === 1, "delimiter must be a char");
 
         return returnValue;
     }
@@ -205,7 +209,7 @@ export abstract class AbstractName implements Name {
         MethodFailedException.assert(AbstractName.isAbstractName(input), failedMessage); 
     }
 
-    protected static isMasked( inputString: string, delimiter:string, escape_char: string) : boolean {
+    protected static isMasked(inputString: string, delimiter: string, escape_char: string): boolean {
         // Preconditions
         IllegalArgumentException.assert(typeof inputString === "string", "Input must be a string");
         IllegalArgumentException.assert(typeof delimiter === "string" && delimiter.length === 1, "Delimiter must be a single character");
@@ -216,10 +220,10 @@ export abstract class AbstractName implements Name {
         for (let i = 0; i < inputString.length; i++) {
             const char = inputString[i];
 
-            if (char === delimiter || char === escape_char) {
-                // Check if the character is escaped
+            if (char === delimiter) {
+                // Check if the delimiter is escaped
                 if (i === 0 || inputString[i - 1] !== escape_char) {
-                    isMasked = false;
+                    isMasked = false; // Not properly escaped
                     break;
                 }
             }

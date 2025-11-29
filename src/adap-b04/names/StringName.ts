@@ -13,13 +13,16 @@ export class StringName extends AbstractName {
 
     constructor(source: string, delimiter?: string) {
         //delim by super
+        if(delimiter=== undefined)
+        {
+            delimiter=DEFAULT_DELIMITER;
+        }
         super(delimiter);
 
         //Precondition for source
         IllegalArgumentException.assert(AbstractName.isMasked(source,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "source not masked correct");
           
-        //delim by super
-        super(delimiter);
+        
 
         //Action
         this.name = source;
@@ -74,7 +77,7 @@ export class StringName extends AbstractName {
     public getComponent(i: number): string {
         // Precondition
         StringName.assertIsStringName(this);
-        IllegalArgumentException.assert(i > 0 && i < this.noComponents, "Index out of bounds");
+        IllegalArgumentException.assert(i >= 0 && i < this.noComponents, "Index out of bounds");
 
         // Actions
         const retValue = this.name.split(this.delimiter)[i];
@@ -169,7 +172,7 @@ export class StringName extends AbstractName {
     // helper
     
     private static assertIsStringName(input: any,failedMessage:string ="Missing Methods of StringName"){
-        InvalidStateException.assert(StringName.isStringName(input), failedMessage );
+        InvalidStateException.assert(!StringName.isStringName(input), failedMessage );
     }
 
     private static isStringName(input: any): input is StringName{
@@ -177,7 +180,7 @@ export class StringName extends AbstractName {
             "name" in input && typeof input.name === "string" &&
             "noComponents"in input && typeof input.noComponents === "number";
         testing = testing && AbstractName.isMasked(input.name, input.getDelimiterCharacter(), input.ESCAPE_CHARACTER) &&
-            input.noComponents == input.split(input.getDelimiterCharacter).length;  
+            input.noComponents == input.name.split(input.getDelimiterCharacter).length;  
 
         return testing;
     }

@@ -21,6 +21,10 @@ export class StringArrayName extends AbstractName {
         );
 
         //delim by super
+        if(delimiter=== undefined)
+        {
+            delimiter=DEFAULT_DELIMITER;
+        }
         super(delimiter);
 
         //Action
@@ -74,7 +78,7 @@ export class StringArrayName extends AbstractName {
 
     public getComponent(i: number): string {
         StringArrayName.assertIsStringArrayName(this);
-        MethodFailedException.assert(i > 0 && i < this.components.length, "Index out of bounds");
+        MethodFailedException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
 
         //Actions
         const retValue = this.components[i];
@@ -89,7 +93,7 @@ export class StringArrayName extends AbstractName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         IllegalArgumentException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "c not masked correct");
+        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         this.components[i] = c;
@@ -103,7 +107,7 @@ export class StringArrayName extends AbstractName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         MethodFailedException.assert(i >= 0 && i <= this.components.length, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "c not masked correct");
+        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         this.components.splice(i, 0, c);
@@ -116,7 +120,7 @@ export class StringArrayName extends AbstractName {
     public append(c: string) {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
-        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "c not masked correct");
+        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
         this.components.push(c);
