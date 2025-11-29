@@ -221,6 +221,23 @@ export abstract class AbstractName implements Name {
     // Checks
     let isMasked = true;
 
+    for (let i = 0; i < inputString.length; i++) {
+        const char = inputString[i];
+
+        if (char === delimiter) {
+            // Check if the delimiter is escaped
+            if (i === 0 || inputString[i - 1] !== escape_char) {
+                isMasked = false; // Not properly escaped
+                break;
+            }
+        }
+
+        // Handle escaped escape characters (e.g., \\)
+        if (char === escape_char && i > 0 && inputString[i - 1] === escape_char) {
+            continue; // Skip double escape characters
+        }
+    }
+
     // Postconditions
     MethodFailedException.assert(typeof isMasked === "boolean", "isCorrectlyMasked did not return a boolean");
 

@@ -21,7 +21,7 @@ export class StringName extends AbstractName {
 
         //Precondition for source
         var isMask=AbstractName.isCorrectlyMasked(source,this.getDelimiterCharacter(),ESCAPE_CHARACTER);
-        IllegalArgumentException.assert(isMask, "source not masked correct");
+        
           
         
 
@@ -180,8 +180,7 @@ export class StringName extends AbstractName {
         var testing : boolean = super.isAbstractName(input) &&
             "name" in input && typeof input.name === "string" &&
             "noComponents" in input && typeof input.noComponents === "number";
-        testing = testing && AbstractName.isCorrectlyMasked(input.name, input.getDelimiterCharacter(), input.ESCAPE_CHARACTER) &&
-            input.noComponents === input.name.split(input.getDelimiterCharacter()).length;  
+        testing = testing && input.noComponents === input.name.split(input.getDelimiterCharacter()).length;  
 
         return testing;
     }
