@@ -10,7 +10,7 @@ export abstract class AbstractName implements Name {
     }
 
     public clone(): Name {
-        return this;
+        return Object.create(this);
     }
 
     public asString(delimiter: string = this.delimiter): string {
