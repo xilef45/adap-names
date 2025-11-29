@@ -11,8 +11,15 @@ export class StringArrayName extends AbstractName {
 
     constructor(source: string[], delimiter?: string) {
         //Precondition for source
-        IllegalArgumentException.assert(true); //source
-               
+        IllegalArgumentException.assert(
+            Array.isArray(source) && source.every(item => typeof item === "string"),
+            "Source must be an array of strings"
+        );
+        IllegalArgumentException.assert(
+            source.length > 0,
+            "Source array must not be empty"
+        );
+
         //delim by super
         super(delimiter);
 
@@ -21,7 +28,6 @@ export class StringArrayName extends AbstractName {
 
         //postcondtion
         StringArrayName.assertIsStringArrayName(this, "this not type of StringArrayName");
-        throw new Error("needs implementation or deletion");
     }
 
     /*public clone(): Name {
@@ -83,7 +89,7 @@ export class StringArrayName extends AbstractName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         IllegalArgumentException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER)), "c not masked correct");
+        IllegalArgumentException.assert(AbstractName.isMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "c not masked correct");
 
         // Actions
         this.components[i] = c;
