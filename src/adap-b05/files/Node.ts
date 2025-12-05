@@ -16,7 +16,7 @@ export class Node {
         this.doSetBaseName(bn);
         this.parentNode = pn; // why oh why do I have to set this
         this.initialize(pn);
-        this.isValidNode()
+        this.isValidNode();
     }
 
     protected initialize(pn: Directory): void {
@@ -26,32 +26,32 @@ export class Node {
 
     public move(to: Directory): void {
         IllegalArgumentException.assert(to.isDirectory())
-        this.isValidNode()
+        this.isValidNode();
         this.parentNode.removeChildNode(this);
         to.addChildNode(this);
         this.parentNode = to;
     }
 
     public getFullName(): Name {
-        this.isValidNode()
+        this.isValidNode();
         const result: Name = this.parentNode.getFullName();
         result.append(this.getBaseName());
         return result;
     }
 
     public getBaseName(): string {
-        this.isValidNode()
+        this.isValidNode();
         return this.doGetBaseName();
     }
 
     protected doGetBaseName(): string {
-        this.isValidNode()
+        this.isValidNode();
         return this.baseName;
     }
 
     public rename(bn: string): void {
         IllegalArgumentException.assert(bn !== '')
-        this.isValidNode()
+        this.isValidNode();
         this.doSetBaseName(bn);
     }
 
@@ -61,7 +61,7 @@ export class Node {
     }
 
     public getParentNode(): Directory {
-        this.isValidNode()
+        this.isValidNode();
         return this.parentNode;
     }
 
@@ -70,8 +70,43 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("Method not implemented.");
+        IllegalArgumentException.assert(bn !== "");
+        this.isValidNode();
+
+        const nodes = new Set<Node>();
+
+        const search = (node: Node): void => {
+            if (node.getBaseName() === bn) {
+                nodes.add(node);
+            }
+
+            if (node.isDirectory()) {
+                const children = (node as any).getChildNodes() as Set<Node>;
+                children.forEach(child => {
+                    search(child);
+                });
+            }
+        };
+
+        try {
+            search(this);
+        } catch (error) {
+            if (
+                error instanceof Exception &&
+                error.hasTrigger() &&
+                error.getTrigger() instanceof InvalidStateException
+            ) {
+                throw error;
+            }
+            throw new ServiceFailureException(
+                "Service failed during findNodes. Please check the filesystem",
+                error as Exception
+            );
+        }
+
+        return nodes;
     }
+
 
     protected isDirectory() {
         return 'getChildNodes' in this && typeof (this as any).getChildNodes === 'function'
