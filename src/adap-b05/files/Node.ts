@@ -57,7 +57,25 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("needs implementation or deletion");
+        const matchingNodes: Set<Node> = new Set<Node>();
+
+        // Check if the current node matches the base name
+        if (this.getBaseName() === bn) {
+            matchingNodes.add(this);
+        }
+
+        // If the current node is a directory, search its children recursively
+        if (this instanceof Directory) {
+            const directory = this as Directory;
+            for (const child of directory.findNodes(directory.getBaseName())) {
+                const childMatches = child.findNodes(bn);
+                for (const match of childMatches) {
+                    matchingNodes.add(match);
+                }
+            }
+        }
+
+        return matchingNodes;
     }
 
 }
