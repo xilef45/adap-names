@@ -23,34 +23,34 @@ describe("CustomStringArrayName Tests", () => {
     let n: Name = new StringArrayName(["a", "b", "c"]);
     expect(n.getComponent(0)).toBe("a");
     expect(n.getComponent(2)).toBe("c");
-    n.setComponent(1, "B");
+    n = n.setComponent(1, "B");
     expect(n.getComponent(1)).toBe("B");
   });
 
   it("getNoComponents, append and remove", () => {
     let n: Name = new StringArrayName(["x"]);
     expect(n.getNoComponents()).toBe(1);
-    n.append("");
+    n = n.append("");
     expect(n.getNoComponents()).toBe(2);
     expect(n.asString()).toBe("x.");
-    n.remove(1);
+    n = n.remove(1);
     expect(n.getNoComponents()).toBe(1);
   });
 
   it("insert at boundaries and middle", () => {
     let n: Name = new StringArrayName(["one", "three"]);
-    n.insert(1, "two");
+    n = n.insert(1, "two");
     expect(n.asString()).toBe("one.two.three");
-    n.insert(0, "zero");
+    n = n.insert(0, "zero");
     expect(n.asString()).toBe("zero.one.two.three");
-    n.insert(n.getNoComponents(), "end");
+    n = n.insert(n.getNoComponents(), "end");
     expect(n.asString()).toBe("zero.one.two.three.end");
   });
 
   it("delimiter variations", () => {
     let n: Name = new StringArrayName(["a", "b"], "/");
     expect(n.asString()).toBe("a/b");
-    n.insert(1, "middle");
+    n = n.insert(1, "middle");
     expect(n.asString("/")).toBe("a/middle/b");
   });
 
@@ -109,9 +109,9 @@ describe("CustomStringArrayName Exception Tests", () => {
   it("postcondition: getNoComponents reflects changes", () => {
     let n: Name = new StringArrayName(["a"]);
     expect(n.getNoComponents()).toBe(1);
-    n.append("b");
+    n = n.append("b");
     expect(n.getNoComponents()).toBe(2);
-    n.remove(1);
+    n = n.remove(1);
     expect(n.getNoComponents()).toBe(1);
   });
 
