@@ -24,7 +24,7 @@ describe("CustomStringName Tests", () => {
     let n: Name = new StringName("a.b.c");
     expect(n.getComponent(0)).toBe("a");
     expect(n.getComponent(2)).toBe("c");
-    n= n.setComponent(1, "B");
+    n = n.setComponent(1, "B");
     expect(n.getComponent(1)).toBe("B");
   });
 

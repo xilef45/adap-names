@@ -159,24 +159,9 @@ export abstract class AbstractName implements Name {
         return returnValue;
     }
 
-    public concat(other: Name): Name {
-        //Precondition
-        AbstractName.assertIsAbstractName(this);
-        IllegalArgumentException.assert(AbstractName.isName(other), "other not Instance of Name");
-
-        //Actions
-        const newComponents = [...Array.from({ length: this.getNoComponents() }, (_, i) => this.getComponent(i)),
-                               ...Array.from({ length: other.getNoComponents() }, (_, i) => other.getComponent(i))];
-        var retvalue =  this.withComponents(newComponents);
-
-        //Postconditions
-        AbstractName.assertIsAbstractName(retvalue);
-        return retvalue; 
-    }
+    public abstract concat(other: Name): Name;
 
     protected abstract getComponents(): string[];
-
-    protected abstract withComponents(components: string[]): Name;
 
     public abstract getNoComponents(): number;
 

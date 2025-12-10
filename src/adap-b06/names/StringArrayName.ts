@@ -6,8 +6,7 @@ import { InvalidStateException } from "../common/InvalidStateException";
 import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringArrayName extends AbstractName {
-
-    protected components: string[] = [];
+    protected readonly components: string[];
 
     constructor(source: string[], delimiter?: string) {
         //Precondition for source
@@ -20,47 +19,13 @@ export class StringArrayName extends AbstractName {
             "Source array must not be empty"
         );
 
-        //delim by super
-        if(delimiter=== undefined)
-        {
-            delimiter=DEFAULT_DELIMITER;
-        }
+        //Action + delim by super
         super(delimiter);
-
-        //Action
-        this.components = source;
+        this.components = [...source];
 
         //postcondtion
         StringArrayName.assertIsStringArrayName(this, "this not type of StringArrayName");
     }
-
-    /*public clone(): Name {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public asDataString(): string {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public isEqual(other: Name): boolean {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public getHashCode(): number {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public isEmpty(): boolean {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public getDelimiterCharacter(): string {
-        throw new Error("needs implementation or deletion");
-    }*/
 
     public getNoComponents(): number {
         //Precondition
@@ -89,88 +54,129 @@ export class StringArrayName extends AbstractName {
         return retValue;
     }
 
-    public setComponent(i: number, c: string) {
-        // Precondition
-        StringArrayName.assertIsStringArrayName(this);
-        IllegalArgumentException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
-        IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
-
-        // Actions
-        this.components[i] = c;
-
-        // Postconditions
-        StringArrayName.assertIsStringArrayName(this);
-        MethodFailedException.assert(this.components[i] === c, "setComponent failed to set the component correctly");
+    protected getComponents(): string[] {
+        return this.components;
     }
 
-    public insert(i: number, c: string) {
+    public setComponent(i: number, c: string): StringArrayName {
+        return this.withComponent(i, c);
+    }
+
+    protected withComponent(i: number, c: string): StringArrayName {
+        // Precondition
+        IllegalArgumentException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
+        IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c, this.getDelimiterCharacter(), ESCAPE_CHARACTER), "Component is not masked correctly");
+
+        // Actions
+        const newComponents = [...this.components];
+        newComponents[i] = c;
+        const retValue = new StringArrayName(newComponents, this.delimiter);
+         // Postconditions
+        StringArrayName.assertIsStringArrayName(retValue);
+        MethodFailedException.assert(retValue.components[i] === c, "setComponent failed to set the component correctly");
+        return retValue;
+    }
+
+    public insert(i: number, c: string): StringArrayName {
+        return this.withInsertedComponent(i, c);
+    }
+
+    public withInsertedComponent(i: number, c: string): StringArrayName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         MethodFailedException.assert(i >= 0 && i <= this.components.length, "Index out of bounds");
         IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
-        this.components.splice(i, 0, c);
+        const newComponents = [...this.components];
+        newComponents.splice(i, 0, c);
+        const retValue = new StringArrayName(newComponents, this.delimiter);
 
-        // Postconditions
-        StringArrayName.assertIsStringArrayName(this);
-        MethodFailedException.assert(this.components[i] === c, "insert failed to insert the component correctly")
+         // Postconditions
+        StringArrayName.assertIsStringArrayName(retValue);
+        MethodFailedException.assert(retValue.components[i] === c, "insert failed to insert the component correctly");
+        return retValue;
+    }   
+    
+    public append(c: string): StringArrayName {
+        return this.withAppendedComponent(c);
     }
 
-    public append(c: string) {
+    public withAppendedComponent(c: string): StringArrayName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         IllegalArgumentException.assert(AbstractName.isCorrectlyMasked(c,this.getDelimiterCharacter(),ESCAPE_CHARACTER), "Component is not masked correctly");
 
         // Actions
-        this.components.push(c);
+        const retValue = new StringArrayName([...this.components, c], this.delimiter);
 
-        // Postconditions
-        StringArrayName.assertIsStringArrayName(this);
-        MethodFailedException.assert(this.components[this.components.length - 1] === c, "append failed to add the component correctly");
+         // Postconditions
+        StringArrayName.assertIsStringArrayName(retValue);
+        MethodFailedException.assert(retValue.components[retValue.components.length - 1] === c, "append failed to append the component correctly");
+        return retValue;
     }
 
-    public remove(i: number) {
-         // Precondition
+    public remove(i: number): StringArrayName {
+        return this.withoutComponent(i);
+    }
+
+    public withoutComponent(i: number): StringArrayName {
+        // Precondition
         StringArrayName.assertIsStringArrayName(this);
         MethodFailedException.assert(i >= 0 && i < this.components.length, "Index out of bounds");
 
-        const oldLen = this.getNoComponents();
         // Actions
-        const removed = this.components.splice(i, 1);
+        const newComponents = this.components.filter((_, index) => index !== i);
+        const retValue = new StringArrayName(newComponents, this.delimiter);
 
         // Postconditions
-        MethodFailedException.assert(removed.length === 1, "remove failed to remove the component correctly");
-        MethodFailedException.assert(oldLen-1 == this.getNoComponents(),"remove failed to remove the component correctly");
+        MethodFailedException.assert(this.getNoComponents()-1 == retValue.getNoComponents(),"remove failed to remove the component correctly");        
+        return retValue;
     }
 
-    public concat(other: Name): void {
+    public concat(other: Name): StringArrayName {
         // Precondition
         StringArrayName.assertIsStringArrayName(this);
         StringArrayName.assertIsStringArrayName(other);
 
         // Actions
+        const newComponents = [...this.components];
         for (let i = 0; i < other.getNoComponents(); i++) {
-            this.components.push(other.getComponent(i));
+            newComponents.push(other.getComponent(i));
         }
-
+        const retValue = new StringArrayName(newComponents, this.delimiter);
+    
         // Postconditions
         StringArrayName.assertIsStringArrayName(this);
         MethodFailedException.assert(this.getNoComponents() >= (other as StringArrayName).getNoComponents(), "concat failed to concatenate components correctly");
+        return retValue;
+    }
+    
+    public equals(other: Name): boolean {
+        if (!(other instanceof StringArrayName)) {
+            return false;
+        }
+        return (
+            this.delimiter === other.getDelimiterCharacter() &&
+            this.getNoComponents() === other.getNoComponents() &&
+            this.components.every((comp, i) => comp === other.getComponent(i))
+        );
     }
 
     // helper
 
-    private static assertIsStringArrayName(input: any,failedMessage:string ="Missing Methods of StringArrayName"){
-        InvalidStateException.assert(StringArrayName.isStringArrayName(input), failedMessage );
+    private static assertIsStringArrayName(input: any, failedMessage: string = "Missing Methods of StringArrayName") {
+        InvalidStateException.assert(StringArrayName.isStringArrayName(input), failedMessage);
     }
 
-    private static isStringArrayName(input: any): input is StringArrayName{
-        var testing : boolean = super.isAbstractName(input) &&
+    private static isStringArrayName(input: any): input is StringArrayName {
+        let testing = super.isAbstractName(input) &&
             "components" in input && input.components instanceof Array;
-        for(var component in input.components)
-        {
-            testing = testing && typeof input.components[component] === "string";
+        if (input.components === undefined || input.components === null) {
+            return false;
+        }
+        for (const component of input.components) {
+            testing = testing && typeof component === "string";
         }
         return testing;
     }
