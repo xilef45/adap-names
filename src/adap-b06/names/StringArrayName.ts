@@ -6,6 +6,7 @@ import { InvalidStateException } from "../common/InvalidStateException";
 import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringArrayName extends AbstractName {
+    
     protected readonly components: string[];
 
     constructor(source: string[], delimiter?: string) {
