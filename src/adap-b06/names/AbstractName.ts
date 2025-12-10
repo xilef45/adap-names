@@ -5,23 +5,17 @@ import { InvalidStateException } from "../common/InvalidStateException";
 import { MethodFailedException } from "../common/MethodFailedException";
 
 export abstract class AbstractName implements Name {
-
-    protected delimiter: string = DEFAULT_DELIMITER;
+    protected readonly delimiter: string;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
-        //Precondition
+        // Precondition
         IllegalArgumentException.assert(delimiter != null, "delimiter null is not allowed");
-        IllegalArgumentException.assert(delimiter != undefined , "delimiter undefined is not allowed");
+        IllegalArgumentException.assert(delimiter != undefined, "delimiter undefined is not allowed");
         IllegalArgumentException.assert(delimiter.length === 1, "delimiter must be a char");
 
-        // Actions
-        if(delimiter=== undefined)
-        {
-            delimiter=DEFAULT_DELIMITER;
-        }
         this.delimiter = delimiter;
 
-        //Postcondition
+        // Postcondition
         AbstractName.assertIsAbstractName(this);
     }
 
@@ -110,6 +104,13 @@ export abstract class AbstractName implements Name {
         return returnValue;
     }
 
+    public equals(other: any): boolean {
+        if (!AbstractName.isName(other)) {
+            return false;
+        }
+        return this.isEqual(other);
+    }
+
     public getHashCode(): number {
         //Precondition
         AbstractName.assertIsAbstractName(this); 
@@ -158,31 +159,42 @@ export abstract class AbstractName implements Name {
         return returnValue;
     }
 
-    abstract getNoComponents(): number;
-
-    abstract getComponent(i: number): string;
-    abstract setComponent(i: number, c: string): void;
-
-    abstract insert(i: number, c: string): void;
-    abstract append(c: string): void;
-    abstract remove(i: number): void;
-
-    public concat(other: Name): void {
+    public concat(other: Name): Name {
         //Precondition
         AbstractName.assertIsAbstractName(this);
         IllegalArgumentException.assert(AbstractName.isName(other), "other not Instance of Name");
 
         //Actions
-        for(let i = 0; i < other.getNoComponents(); i++) {
-            this.append(other.getComponent(i))
-        }
+        const newComponents = [...Array.from({ length: this.getNoComponents() }, (_, i) => this.getComponent(i)),
+                               ...Array.from({ length: other.getNoComponents() }, (_, i) => other.getComponent(i))];
+        var retvalue =  this.withComponents(newComponents);
 
         //Postconditions
-        AbstractName.assertIsAbstractName(this);
+        AbstractName.assertIsAbstractName(retvalue);
+        return retvalue; 
     }
 
+    protected abstract getComponents(): string[];
 
-    //Helper
+    protected abstract withComponents(components: string[]): Name;
+
+    public abstract getNoComponents(): number;
+
+    public abstract getComponent(i: number): string;
+
+    public abstract setComponent(i: number, c: string): Name;
+
+    public abstract insert(i: number, c: string): Name;
+
+    public abstract append(c: string): Name;
+
+    public abstract remove(i: number): Name;
+
+
+    protected static assertIsAbstractName(input: any, failedMessage: string = "Missing Methods of AbstractName"): void {
+        MethodFailedException.assert(AbstractName.isAbstractName(input), failedMessage); 
+    }
+
     protected static isAbstractName(input: any): input is AbstractName {
         return AbstractName.isName(input) && "delimiter" in input &&
             typeof input.delimiter === "string" && input.delimiter.length === 1;
@@ -203,10 +215,6 @@ export abstract class AbstractName implements Name {
             "getDelimiterCharacter" in input && typeof input.getDelimiterCharacter === "function" &&
             "isEqual" in input && typeof input.isEqual === "function" &&
             "getHashCode" in input && typeof input.getHashCode === "function";
-    }
-
-    protected static assertIsAbstractName(input:any, failedMessage:string ="Missing Methods of AbstractName"): void {
-        MethodFailedException.assert(AbstractName.isAbstractName(input), failedMessage); 
     }
 
     protected static isCorrectlyMasked(inputString: string, delimiter: string, escape_char: string): boolean {
